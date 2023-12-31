@@ -1,0 +1,701 @@
+#include<iostream>
+#include<iomanip>
+#include<fstream>
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+using namespace std;
+int c, quan[50];
+class item
+{
+	private:
+		int code;
+		char name[15];
+		int Qty;
+		int min_stock;
+		int price;
+        long long cd;
+	public:
+	void get_item(void);
+	void put_item(void);
+    void stock_item(void);
+	void checkStockLevel(void);
+    void get_vendor(void);
+    void put_vendor(void);
+	int get_code(void)
+	{
+		return code;
+	}
+	void update_Qty(int num)
+	{
+		Qty=num;
+	}
+    void update_cd(int num)
+    {
+        cd=num;
+    }
+};
+
+void item::get_item(void)
+{
+	cout<<"Enter Item no.:";
+	cin>>code;
+	fflush(stdin);
+	cout<<"Enter Item Name:";
+	cin>>name;
+	cout<<"Enter Current stock:";
+	cin>>Qty;
+	cout<<"Enter Minimum stock:";
+	cin>>min_stock;
+	cout<<"Enter price:";
+	cin>>price;
+	
+}
+void item::put_item(void)
+{
+	cout<<setw(10)<<code<<setw(15)<<name<<setw(15)<<Qty<<setw(15)<<min_stock<<setw(10)<<price<<endl;
+}
+void item::checkStockLevel(void) {
+            if (Qty < min_stock) {
+                // Trigger alert
+                cout << "ALERT: " << name << " is running low on stock!" << endl;
+            }
+}
+void item::stock_item(void)
+{
+	cout<<setw(10)<<code<<setw(15)<<name<<setw(20)<<quan[c]<<setw(15)<<Qty<<endl;
+}   
+void item::get_vendor(void)
+{
+	cout<<"Enter Vendor Code";
+	cin>>code;
+	fflush(stdin);
+	cout<<"Enter Vendor Name:";
+	cin>>name;
+	cout<<"Enter Contact Details:";
+	cin>>cd;
+}
+void item::put_vendor(void)
+{
+	cout<<setw(6)<<code<<setw(25)<<name<<setw(20)<<cd<<endl;
+}
+
+void add_record(void);
+void show_record(void);
+void show_all(void);
+void delete_record(void);
+void modify_record(void);
+void place_order(void);
+void admin_menu(void);
+void login_code(void);
+void sales_report(void);
+void add_vendor(void);
+void show_vendor(void);
+void all_vendor(void);
+void delete_vendor(void);
+void modify_vendor(void);
+void vendor_code(void);
+
+item it;
+fstream file;
+
+void login();
+void registration();
+void forgot();
+
+int main()
+{
+    int c;
+    cout<<"           WELCOME TO TIWARI UNCLE'S CANTEEN          "<<endl;
+    cout<<"\n";
+    cout<<"**LOGIN AND REGISTRATION**"<<endl;
+    cout<<"\n";
+    cout<<"\t 1. Login "<<endl;
+    cout<<"\t 2. Register "<<endl;
+    cout<<"\t 3. Forgot Password "<<endl;
+    cout<<"\t 4. Exit "<<endl;
+    cout<<"\n \t Please enter your choice:\t";
+    cin>>c;
+    switch(c)
+    {
+        case 1:
+            login();
+            break;
+
+        case 2:
+            registration();
+            break;   
+
+        case 3:
+            forgot();
+            break;
+
+        case 4:
+            cout<<"\t\t\t Thank you for visiting \n"<<endl;     
+
+        default:
+        system("cls");
+        cout<<"\t\t Please select from the options given above \n"<<endl;
+        main();     
+
+    }
+}
+
+
+void login(){
+    int count;
+    string userId,password,Id,pass;
+    system("cls");
+    cout<<"\t\t\t Please enter the Username and Password "<<endl;
+    cout<<"\t\t\t USERNAME: ";
+    cin>>userId;
+    cout<<"\t\t\t PASSWORD: ";
+    cin>>password;
+
+    ifstream input("record.txt");
+    while(input>>Id>>pass)
+    {
+        if(Id==userId && pass==password)
+        {
+            count=1;
+            system("cls");
+        }
+    }
+    input.close();
+
+    if(count==1){
+        cout<<userId<<"\n Your Login is successfull "<<endl;
+        login_code();
+    }
+    else{
+        cout<<"\n Login Error \n Please check your credentials "<<endl;
+        main();
+    }
+}
+
+void registration(){
+    string ruserId,rpassword,rid,rpass;
+    system("cls");
+    cout<<"\t\t\t Enter the username: ";
+    cin>>ruserId;
+    cout<<"\t\t\t Enter the password: ";
+    cin>>rpassword;
+
+    ofstream f1("record.txt",ios::app);
+    f1<<ruserId<<' '<<rpassword<<endl;
+    system("cls");
+    cout<<"\n\t\t\t Registration is successfull! \n";
+    main();
+}
+
+void forgot(){
+    int option;
+    system("cls");
+    cout<<"\t\t\t You forgot the password ? NO WORRIES :)"<<endl;
+    cout<<"1. Search Id by username "<<endl;
+    cout<<"2. Go back to the main menu "<<endl;
+    cout<<"\t\t\t Enter your choice:\t";
+    cin>>option;
+    switch(option)
+    {
+        case 1:
+        {
+            int count=0;
+            string suserId,sId,spass;
+            cout<<"\n\t\t\t Enter your username: "<<endl;
+            cin>>suserId;
+
+            ifstream f2("record.txt");
+            while(f2>>sId>>spass)
+            {
+                if(sId==suserId){
+                    count=1;
+                }
+            }
+            f2.close();
+            if(count==1){
+                cout<<"\n\n Your account is found!\n";
+                cout<<"\n\n Your password is: "<<spass;
+                main();
+            }
+            else{
+                cout<<"\n\t Sorry! your account is not found! \n";
+                main();
+            }
+            break;
+        }
+        case 2:
+        {
+            main();
+        }
+        default:
+        cout<<"\t\t\t Wrong choice! Please try again"<<endl;
+        forgot();
+    }
+}
+
+void login_code()
+{
+	int option;
+    while(1)
+    {
+        system("cls");
+        cout<<"\n\n\n\tMAIN MENU ";
+        cout<<"\n\n\t 1. CUSTOMER ";
+        cout<<"\n\n\t 2. ADMINISTRATOR";
+        cout<<"\n\n\t 3. VENDOR MANAGEMENT";
+        cout<<"\n\n\t 4. BACK TO LOGIN AND REGISTRATION";
+        cout<<"\n\n\t 4. EXIT";
+        cout<<"\n\n\t Please select your option (1-5) \t";
+        cin>>option;
+        switch(option)
+        {
+            case 1: {system("cls");
+            place_order();
+            break;
+            }
+            case 2:{admin_menu();
+            break;
+            }
+            case 3:{ vendor_code();
+            break;
+            }
+            case 4:{ main();
+            break;    
+            }
+            case 5:{exit(0);
+            break;
+            }
+            default:{cout<<"\a";
+            break;
+            }
+        }
+    } 
+}
+
+void show_all(void)
+{
+    file.open("stocks.dat",ios::in|ios::binary);
+    if(!file)
+    {
+        cout<<"File not found";
+        exit(0);
+    }
+    else{
+        file.read((char*)&it,sizeof(it));
+        while(!file.eof())
+        {
+            it.put_item();
+            file.read((char*)&it,sizeof(it));
+        }
+    }
+    file.close();
+}
+
+void show_record(void)
+{
+    int no,flag=0;
+    file.open("stocks.dat",ios::in|ios::binary);
+    if(!file)
+    {
+        cout<<"File not Found";
+        exit(0);
+    }
+    else{
+        cout<<"Enter Item no. to search :";
+        cin>>no;
+        file.read((char*)&it,sizeof(it));
+        while(!file.eof())
+        {
+            if(no==it.get_code())
+            {
+                flag=1;
+                cout<<"=================================================================\n";
+                cout<<setw(10)<<"Item no."<<setw(15)<<"Name"<<setw(15)<<"Current stock"<<setw(15)<<"Min stock"<<setw(10)<<"Price"<<endl;
+                cout<<"=================================================================\n";
+                it.put_item();
+                cout<<"=================================================================\n";
+                break;               
+            }
+            file.read((char*)&it,sizeof(it));
+        }
+        if(flag==0)
+        {
+            cout<<"Item not found...\
+            n";
+        }
+    }
+        file.close();
+}
+
+void delete_record()
+    {
+        int no;
+        cout<<"Enter Item code to delete :";
+        cin>>no;
+        ofstream file2;
+        file2.open("new1.dat",ios::out|ios::binary);
+        file.open("stocks.dat",ios::in|ios::binary);
+        if(!file)
+        {
+            cout<<"Found not found";
+            exit(0);
+        }
+        else{
+            file.read((char*)&it,sizeof(it));
+            while(!file.eof())
+            {
+                if(no!=it.get_code())
+                {
+                    file2.write((char*)&it,sizeof(it));
+                }
+                file.read((char*)&it,sizeof(it));
+            }
+        }
+        file2.close();
+        file.close();
+        remove("stocks.dat");
+        rename("new1.dat","stocks.dat");
+    }
+
+    void modify_record(void)
+    {
+        int no,num;
+        cout<<"enter item code to modify :";
+        cin>>no;
+        cout<<"New stock:";
+        cin>>num;
+        file.open("stocks.dat",ios::in|ios::out|ios::binary);
+        if(!file)
+        {
+            cout<<"File not found";
+            exit(0);
+        }
+        while(file.read((char*)&it,sizeof(it)))
+        {
+            if(it.get_code()==no)
+            {
+                it.update_Qty(num);
+                int pos=sizeof(it);
+                file.seekp(-pos,ios::cur);
+                file.write((char*)&it,sizeof(it));
+            }
+        }
+        file.close();
+    }
+
+
+    void add_record()
+{
+	char ch='y';
+	file.open("stocks.dat",ios::app | ios::binary);
+	while( ch=='y' || ch=='Y')
+	{
+		it.get_item();
+		file.write((char*)&it, sizeof(it));
+		cout<<"Add more records.....(y/n)?";
+		cin>>ch;
+	}
+	file.close();
+}
+
+
+void place_order()
+{
+    system("cls");
+    int order_arr[50],quan[50],c=0;
+    float amt,damt,total=0;
+    char ch='Y';
+    cout<<setw(10)<<"Item no."<<setw(25)<<" Name "<<setw(20)<<" Price "<<endl;
+    cout<<setw(10)<<"11"<<setw(25)<<"Burger"<<setw(20)<<" 30 "<<endl;
+    cout<<setw(10)<<"22"<<setw(25)<<" Patties "<<setw(20)<<" 20 "<<endl;
+    cout<<setw(10)<<"33"<<setw(25)<<" Samosa "<<setw(20)<<" 15 "<<endl;
+    cout<<setw(10)<<"44"<<setw(25)<<" Coffee "<<setw(20)<<" 25 "<<endl;
+    cout<<setw(10)<<"55"<<setw(25)<<" Tea "<<setw(20)<<" 10 "<<endl;
+    cout<<setw(10)<<"66"<<setw(25)<<" Paneer Kulcha "<<setw(20)<<" 40 "<<endl;
+    cout<<"\n=============================";
+    cout<<"\n     PLACE YOUR ORDER";
+    cout<<"\n=============================";
+    do{
+        cout<<"\n\n Enter the item code : \n";
+        cin>>order_arr[c];
+        cout<<"\nQuantity in no. : \n";
+        cin>>quan[c];
+        c++;
+        cout<<"\nDo you want to order another item ? (y/n) \t";
+         cin>>ch;
+    }while(ch=='y'||ch=='Y');
+    cout<<"\n\nThank you for placing the order";
+    
+}
+
+    void admin_menu(){
+    int option;
+	while(1)
+	{
+		system("cls");
+        cout<<"\t*** Administrative Menu ***"<<endl;
+		cout<<"\t1. Add new Item"<<endl;
+		cout<<"\t2. Display all Item"<<endl;
+        cout<<"\t3. Display Particular Item"<<endl;
+		cout<<"\t4. Delete Item"<<endl;
+		cout<<"\t5. Update/modify Item"<<endl;
+        cout<<"\t6. Sales report"<<endl;
+        cout<<"\t7. Back to Main Menu\n"<<endl;
+		cout<<"\t8. Exit\n"<<endl;
+		cout<<"\tEnter option no.:\t";
+		cin>>option;
+		switch(option)
+		{
+			case 1:{
+            add_record();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+            }
+				
+			case 2: {
+				cout<<"----------------------------------------------------------------------------\n";
+				cout<<setw(10)<<"Item no."<<setw(15)<<"Name"<<setw(15)<<"Currnt stock"<<setw(15)<<"Min stock"<<setw(10)<<"Price"<<endl;
+				cout<<"----------------------------------------------------------------------------\n";
+				show_all();
+				cout<<"----------------------------------------------------------------------------\n";
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+			case 3: { show_record();
+				cout<<"Press any key for main menu";
+				getch();				
+				break;
+			}
+			case 4: { delete_record();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+			case 5: {modify_record();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+            case 6:{ cout<<"----------------------------------------------------------------------------\n";
+	            cout<<setw(10)<<"Item no."<<setw(15)<<"Name"<<setw(25)<<"(Outgoing stock/sales)"<<setw(15)<<"Incoming stock"<<endl;
+	            cout<<"----------------------------------------------------------------------------\n";
+	            sales_report();
+	            cout<<"----------------------------------------------------------------------------\n";
+	            cout<<"Press any key for main menu";
+	            getch();
+                break;
+            }
+            case 7:{ login_code(); }
+            case 8:{
+                exit(0);
+            }
+			default:{
+				cout<<"Incorrect option, Press any key for main menu";
+				getch();
+				break;
+			}
+	 	}
+	}
+}
+
+void sales_report(void)
+{
+    file.open("stocks.dat",ios::in|ios::binary);
+    if(!file)
+    {
+        cout<<"File not found";
+        exit(0);
+    }
+    else{
+        file.read((char*)&it,sizeof(it));
+        while(!file.eof())
+        {
+            it.stock_item();
+            file.read((char*)&it,sizeof(it));
+        }
+    }
+    file.close();
+}
+
+void vendor_code()
+{
+	int option;
+	while(1)
+	{
+		system("cls");
+        cout<<"*MENU"<<endl;
+		cout<<"1. Add new Vendor"<<endl;
+		cout<<"2. Display all Vendors"<<endl;
+        cout<<"3. Display Particular Vendor"<<endl;
+		cout<<"4. Delete Vendor"<<endl;
+		cout<<"5. Update/modify Vendor Details"<<endl;
+		cout<<"6. Exit"<<endl;
+		cout<<"Enter option no.: "<<endl;
+		cin>>option;
+		switch(option)
+		{
+			case 1:{
+            add_vendor();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+            }
+				
+			case 2: {
+				cout<<"------------------------------------------------------\n";
+				cout<<setw(6)<<"Code"<<setw(15)<<"Name"<<setw(10)<<"CD"<<endl;
+				cout<<"------------------------------------------\n";
+				all_vendor();
+				cout<<"------------------------------------------------------\n";
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+			case 3: { show_vendor();
+				cout<<"Press any key for main menu";
+				getch();				
+				break;
+			}
+			case 4: { delete_vendor();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+			case 5: {modify_vendor();
+				cout<<"Press any key for main menu";
+				getch();
+				break;
+			}
+            case 6:{
+                exit(0);
+            }
+	 	}
+	}
+}
+
+void add_vendor()
+{
+	char ch='y';
+	file.open("vendor.dat",ios::app | ios::binary);
+	while( ch=='y' || ch=='Y')
+	{
+		it.get_vendor();
+		file.write((char*)&it, sizeof(it));
+		cout<<"Add more records.....(y/n)?";
+		cin>>ch;
+	}
+	file.close();
+}
+
+void all_vendor(void)
+{
+    file.open("vendor.dat",ios::in|ios::binary);
+    if(!file)
+    {
+        cout<<"File not found";
+        exit(0);
+    }
+    else{
+        file.read((char*)&it,sizeof(it));
+        while(!file.eof())
+        {
+            it.put_vendor();
+            file.read((char*)&it,sizeof(it));
+        }
+    }
+    file.close();
+}
+
+void show_vendor(void)
+{
+    int no,flag=0;
+    file.open("vendor.dat",ios::in|ios::binary);
+    if(!file)
+    {
+        cout<<"File not Found";
+        exit(0);
+    }
+    else{
+        cout<<"Enter Vendor code to search :";
+        cin>>no;
+        file.read((char*)&it,sizeof(it));
+        while(!file.eof())
+        {
+            if(no==it.get_code())
+            {
+                flag=1;
+                cout<<"========================================================================\n";
+                cout<<setw(6)<<"Code"<<setw(25)<<" Name "<<setw(20)<<" CD "<<endl;
+                cout<<"=========================================================================\n";
+                it.put_item();
+                cout<<"========================================================================\n";
+                break;               
+            }
+            file.read((char*)&it,sizeof(it));
+        }
+        if(flag==0)
+        {
+            cout<<"Vendor not found...\n";
+        }
+    }
+        file.close();
+}
+
+    void delete_vendor()
+    {
+        int no;
+        cout<<"Enter Vendor code to delete :";
+        cin>>no;
+        ofstream file2;
+        file2.open("neww.dat",ios::out|ios::binary);
+        file.open("vendor.dat",ios::in|ios::binary);
+        if(!file)
+        {
+            cout<<"file not found";
+            exit(0);
+        }
+        else{
+            file.read((char*)&it,sizeof(it));
+            while(!file.eof())
+            {
+                if(no!=it.get_code())
+                {
+                    file2.write((char*)&it,sizeof(it));
+                }
+                file.read((char*)&it,sizeof(it));
+            }
+        }
+        file2.close();
+        file.close();
+        remove("vendor.dat");
+        rename("neww.dat","vendor.dat");
+    }
+
+    void modify_vendor(void)
+    {
+        int no,num;
+        cout<<"enter item code to modify :";
+        cin>>no;
+        cout<<"Enter no of items issued :";
+        cin>>num;
+        file.open("vendor.dat",ios::in|ios::out|ios::binary);
+        if(!file)
+        {
+            cout<<"File not found";
+            exit(0);
+        }
+        while(file.read((char*)&it,sizeof(it)))
+        {
+            if(it.get_code()==no)
+            {
+                it.update_cd(num);
+                int pos=sizeof(it);
+                file.seekp(-pos,ios::cur);
+                file.write((char*)&it,sizeof(it));
+            }
+        }
+        file.close();
+    }
