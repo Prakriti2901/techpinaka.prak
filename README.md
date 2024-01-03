@@ -42,4 +42,4 @@ This program uses standard C++ libraries.
 Contributing
 Feel free to contribute by submitting issues or pull requests. Suggestions and improvements are always welcome.
 
-License
+
